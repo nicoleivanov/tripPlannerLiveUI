@@ -38,28 +38,30 @@ for(var i = 0; i < restaurants.length; i++) {
 for(var i = 0; i < activities.length; i++) {
     $('#activity-choices').append(`<option value='${activities[i].name}' data-lat='${activities[i].place.location[0]}' data-lon='${activities[i].place.location[1]}'>${activities[i].name}</option>`);
 }
+let markerArray = [];
 
 $('#hotelPlus').on('click', function() {
-    console.log($('#hotel-choices').val());
+    // console.log($('#hotel-choices').val());
     var $hotelName = $('#hotel-choices').val();
     var lat = $('#hotel-choices').find(':selected').data('lat');
     var lon = $('#hotel-choices').find(':selected').data('lon');
     $('#hotelItinerary').append(`
-    <span class="title">${$hotelName}</span>
+    <span class="title" value="${$hotelName}">${$hotelName}</span>
     <button class="btn btn-xs btn-danger remove btn-circle">x</button>`)
-    console.log(hotels);
+    //console.log(hotels);
     var Latlng = new google.maps.LatLng(lat, lon);
     var marker = new google.maps.Marker({
         position: Latlng,
         title: `${$hotelName}`
     });
+    markerArray.push(marker);
     // Add the marker to the map by calling setMap()
    
     marker.setMap(map);
 })
 
 $('#restaurantPlus').on('click', function() {
-    console.log($('#restaurant-choices').val());
+    // console.log($('#restaurant-choices').val());
     var $restaurant = $('#restaurant-choices').val()
     var lat = $('#restaurant-choices').find(':selected').data('lat');
     var lon = $('#restaurant-choices').find(':selected').data('lon');
@@ -77,7 +79,7 @@ $('#restaurantPlus').on('click', function() {
 })
 
 $('#activityPlus').on('click', function() {
-    console.log($('#activity-choices').val());
+    // console.log($('#activity-choices').val());
     var $activity = $('#activity-choices').val()
     var lat = $('#activity-choices').find(':selected').data('lat');
     var lon = $('#activity-choices').find(':selected').data('lon');
@@ -90,6 +92,19 @@ $('#activityPlus').on('click', function() {
         title: `${$activity}`
     });
     // Add the marker to the map by calling setMap()
-   
-    marker.setMap(map);
+   marker.setMap(map);
+})
+
+// $('.btn btn-xs btn-danger remove btn-circle')
+
+$('#hotelItinerary').on('click', '.remove', function(){
+    for (var i=0; i<markerArray.length; i++){
+        console.log($(this).prev())
+        console.log($(this))
+        if (markerArray[i].title === $(this).prev().val()){
+            markerArray[i].setMap(null)
+        }
+    }
+    $(this).prev().remove();
+    $(this).remove();
 })
